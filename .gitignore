@@ -1,0 +1,7 @@
+# Docker files
+docker.sh
+postgres.yml
+# Task description file
+a9s DS - homework instructions.pdf
+# Environment files
+*.env
