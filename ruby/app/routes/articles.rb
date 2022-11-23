@@ -15,15 +15,29 @@ class ArticleRoutes < Sinatra::Base
   get('/') do
     summmary = @articleCtrl.get_batch
 
-    if !(summary[:ok])
+    # !(summary[:ok]) -> should not be negated
+    if summary[:ok]
+      # status 200
+      # body { articles: summary[:data] }.to_json
       { articles: summary[:data] }.to_json
     else
+      # status 404
+      # body { msg: 'Could not get articles.' }.to_json
       { msg: 'Could not get articles.' }.to_json
     end
   end
 
   get('/:id') do
-    
+    result = @articleCtrl.get_article(id)
+    if result[:ok]
+      # status 200
+      # body { data: result[:data]}
+      { data: result[:data]}
+    else 
+      # status 404
+      # body { msg: 'Could not get article.' }.to_json
+      { msg: 'Could not get article.' }.to_json
+    end
   end
 
   post('/') do
