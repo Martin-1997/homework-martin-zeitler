@@ -34,9 +34,10 @@ class ArticleController
   end
 
   def get_article(id)
-    res = Article.where(:id => id)
+    #res = Article.where(:id => id).first
+    res = Article.find(id)
 
-    if res.empty?
+    if !res.id?
       { ok: false, msg: 'Article not found' } # 1. error These lines need to be switched
     else
       { ok: true, data: res }
@@ -49,7 +50,11 @@ class ArticleController
   def delete_article(id)
     # returns the number of rows deleted
     # https://api.rubyonrails.org/v3.1/classes/ActiveRecord/Relation.html#method-i-delete
-    delete_count = Article.delete(:id => id)
+
+
+    delete_count = Article.delete(id)
+
+    
 
     if delete_count == 0
       # Should be false

@@ -1,6 +1,6 @@
 require_relative '../controllers/articles'
 
-class ArticleRoutes < Sinatra::Base
+class ArticleRoutes <  Sinatra::Base # Inheritance
   use AuthMiddleware
 
   def initialize
@@ -13,39 +13,34 @@ class ArticleRoutes < Sinatra::Base
   end
 
   get('/') do
-    summmary = @articleCtrl.get_batch
+    summary = @articleCtrl.get_batch
 
     # !(summary[:ok]) -> should not be negated
     if summary[:ok]
-      # status 200
-      # body { articles: summary[:data] }.to_json
       { articles: summary[:data] }.to_json
     else
-      # status 404
-      # body { msg: 'Could not get articles.' }.to_json
       { msg: 'Could not get articles.' }.to_json
     end
   end
 
   get('/:id') do
-    result = @articleCtrl.get_article(id)
+
+    result = @articleCtrl.get_article(params['id'])
+
+
     if result[:ok]
-      # status 200
-      # body { data: result[:data]}
-      { data: result[:data]}
+      { article: result[:data]}.to_json
     else 
-      # status 404
-      # body { msg: 'Could not get article.' }.to_json
       { msg: 'Could not get article.' }.to_json
     end
   end
 
   post('/') do
     payload = JSON.parse(request.body.read)
-    summary = @articleCtrl.update_article(payload)
+    summary = @articleCtrl.create_article(payload)
 
     if summary[:ok]
-      { msg: 'Article updated' }.to_json
+      { msg: 'Article created' }.to_json
     else
       { msg: summary[:msg] }.to_json
     end
@@ -53,21 +48,22 @@ class ArticleRoutes < Sinatra::Base
 
   put('/:id') do
     payload = JSON.parse(request.body.read)
-    summary = @articleCtrl.uptade_article params['ids'], payload
+    summary = @articleCtrl.update_article(params['id'], payload)
 
     if summary[:ok]
+      { msg: 'Article updated'}.to_json
     else
       { msg: summary[:msg] }.to_json
     end
   end
 
   delete('/:id') do
-    summary = self.delete_article params['id']
+    summary = @articleCtrl.delete_article(params['id'])
 
     if summary[:ok]
       { msg: 'Article deleted' }.to_json
     else
-      { mgs: 'Article does not exist' }.to_bson
+      { msg: 'Article does not exist' }.to_json
     end
   end
 end

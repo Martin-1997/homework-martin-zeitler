@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'rack/test'
-require 'rspec/autorun'
+# This is deprecated according to console log
+# require 'rspec/autorun'
 require 'json'
 require 'base64'
 require_relative '../app/middleware/auth'
